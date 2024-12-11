@@ -2,6 +2,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
+
+# Store some assumptions about the spectrometer
+class cl2_experiment_constants:
+    def __init__(self):
+
+        # 95% CI's for various sensed quantities
+        self.ftir_absolute_accuracy_95 = 1 #ppm
+        self.ftir_percent_accuracy_95 = 5 #percent
+        self.picarro_absolute_accuracy_95 = 0.1 #ppm
+        self.picarro_percent_accuracy_95 = 5 #percent
+        self.cl2_mfc_sccm_accuracy_95 = 0.5 #standard cc's per minute; based on our experience working with the device and checking it with flow meters
+        self.cl2_node_absolute_accuracy_95 = 1 #ppm; an estimate of error due to slow rates of stabilization due to Cl2 sticking to things
+
+        # Gases to extract from the logfile and store with 95% CI's
+        self.ftir_bypass_fields_to_store_in_conversion_file = ['FTIR: CO2 (ppm)','FTIR: CO (ppm)','FTIR: CH2O (ppm)']
+
 # Extract conversions and 95% CI's from the conversion dataframe for gases from optical spectrometry (i.e., CH4)
 # We want to combine 1) the measured noise and 2) the warranted accuracy of the instruments to get an estimate of 95% confidence intervals for these readings
 # E.g., the FTIR is generally accurate to +-1% and 1 ppm, and there's also some noise in the readings.

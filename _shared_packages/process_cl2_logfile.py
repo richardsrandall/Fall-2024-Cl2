@@ -368,6 +368,12 @@ class RemovalFinder:
                 current_bypass_intervals.append(add_me)
         self.bypass_intervals[which_dataframe] = current_bypass_intervals
 
+    def export_bypass_dataframe(self,which_experiment=None):
+        out = self.export_bypass_periods(folder_path=None,do_return=True,do_export=False)
+        if which_experiment is not None:
+            out = out[out.experiment_name==which_experiment]
+        return out
+
     def export_bypass_periods(self,folder_path,do_return=False,do_export=True):
         dfs_to_concat = []
         for which_dataframe in self.bypass_intervals.keys():
@@ -405,7 +411,7 @@ class RemovalFinder:
             current_df['experiment_name']= [which_dataframe for b in current_df['bypass_start']]
             dfs_to_concat.append(current_df)
         final_df = pd.concat(dfs_to_concat)
-        final_df.reindex()
+        final_df.reset_index()
         if do_export:
             # Find the destination
             if folder_path[len(folder_path)-1]!='/':
@@ -493,8 +499,18 @@ class RemovalFinder:
                     thing.pop(k)
         self.out = self.out[self.out['experiment_name']!=experiment]
 
+    def export_conversion_dataframe(self,which_experiment=None):
+        out = self.export_conversion_results(folder_path=None,merge=True,do_return=True,do_export=False)
+        if which_experiment is not None:
+            out = out[out.experiment_name==which_experiment]
+        return out
+
     def export_conversion_results_to_csv(self,folder_path,merge=True):
+        self.export_conversion_results(folder_path,merge,False,True)
+
+    def export_conversion_results(self,folder_path,merge=True,do_return=False,do_export=True):
         # Find the destination
+        folder_path = str(folder_path)
         if folder_path[len(folder_path)-1]!='/':
             folder_path+="/"
         full_path = folder_path+"conversions_"+self.identifier+".csv"
@@ -530,8 +546,11 @@ class RemovalFinder:
                     line_to_add+=[float(row['baseline']),float(row['conversion']),float(row['variance'])]
             new_out.loc[len(new_out.index)] = line_to_add
         # Export it
-        new_out.reindex()
-        new_out.to_csv(full_path)
+        new_out.reset_index()
+        if do_export:
+            new_out.to_csv(full_path)
+        if do_return:
+            return new_out
 
     def translate_tags(self,string):
         str_rep = ("dict("+string.replace(";",",")+")")
