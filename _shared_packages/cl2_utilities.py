@@ -23,7 +23,7 @@ def extract_spectrometer_data_from_conversions(conversion_dataframe,fields,perce
     out = []
     for f in fields:
         avg_f = np.array(conversion_dataframe[f+' conversion']) # Average as stored in the dataframe
-        reading_std_f = np.array(conversion_dataframe[f+' variance'])**0.5 # Stdev based on instrument noise as stored in the dataframe
+        reading_std_f = np.array(conversion_dataframe[f+' conversion variance due to noise'])**0.5 # Stdev based on instrument noise as stored in the dataframe
         percent_accuracy_std_f = 0.01*0.5*percent_accuracy_95*avg_f #Stdev based on the percent accuracy of the instrument (e.g., +-5% of reading)
         absolute_accuracy_std_f = 0.5*absolute_accuracy_95 #Stdev based on the absolute accuracy of the instrument 
         total_std_f = np.sqrt(reading_std_f**2 + percent_accuracy_std_f**2 + absolute_accuracy_std_f**2) #Total stdev from the above 3 sources
@@ -33,20 +33,25 @@ def extract_spectrometer_data_from_conversions(conversion_dataframe,fields,perce
 
 # Calculate 95% CI for chlorine readings, given nominal Cl2 and measured Cl2
 # Due to the approach of frequently calibrating the Cl2 sensor, using the MFC bank's trusted Cl2 concentration as a standard, we need a slightly different CI tracking approach.
-def extract_cl2_data_from_conversions(conversion_dataframe,cl2_tank_ppm,cl2_mfc_sccm_accuracy_95,cl2_node_absolute_accuracy_95):
-    cl2_baseline = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus baseline (mV) baseline'])
-    cl2_variance = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus baseline (mV) variance'])
-    cl2_conversion = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus baseline (mV) conversion'])
+def extract_cl2_data_from_conversions(conversion_dataframe,bypass_dataframe,cl2_tank_ppm,cl2_mfc_sccm_accuracy_95,cl2_node_absolute_accuracy_95):
+    #cl2_baseline = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) baseline'])
+    #cl2_variance = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) conversion variance due to noise'])
+    #cl2_conversion = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) conversion'])
+    start_times = conversion_dataframe['start_time']
+    means = (bypass_dataframe.groupby('closest_start_time').mean(numeric_only=True).reset_index()) 
+    flows = conversion_dataframe['flow_rate']
+    cl2_baseline = [(tank/flow)*float(means[means.closest_start_time==t]['Cl2 MFC: Setpoint Entry']) for t,tank,flow in zip(start_times,cl2_tank_ppm,flows)]
+    cl2_conversion = [conv*(nom/baseline) for nom,conv,baseline in zip(cl2_baseline,conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) conversion'],conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) baseline'])]
+    cl2_conversion_scale = np.array(cl2_conversion)/np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) conversion'])
+    cl2_variance = cl2_conversion_scale*cl2_conversion_scale*np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) conversion variance due to noise'])
+
     total_flow = np.array(conversion_dataframe['flow_rate'])
     ppm_error = cl2_tank_ppm*(cl2_mfc_sccm_accuracy_95/total_flow) # e.g., 1000 ppm tank with 0.5 sccm accuracy and 200 total flow gives 2.5 ppm error
     fractional_error_of_baseline = ppm_error / cl2_baseline # If we're using "30ppm" as a baseline to calibrate the Cl2 sensor, that could actually have been 27.5-32.5 ppm.
     conv_percent_accuracy_std = 0.5*fractional_error_of_baseline*cl2_conversion # The Cl2 sensor reads relative to that baseline, so we develop the 95% CI for the Cl2 conversion accordingly.
     conv_total_std = np.sqrt(conv_percent_accuracy_std**2 + cl2_variance + (0.5*cl2_node_absolute_accuracy_95)**2) # Combine the variances due to calibration and due to measured noise, the latter of which is usually quite small.
     conversion_ci_95 = 2*conv_total_std
-    baseline_percent_accuracy_std = 0.5*fractional_error_of_baseline*cl2_baseline
-    baseline_total_std = np.sqrt(baseline_percent_accuracy_std**2+(0.5*cl2_node_absolute_accuracy_95)**2)
-    baseline_ci_95 = 2*baseline_total_std
-    return (cl2_baseline, baseline_ci_95, cl2_conversion, conversion_ci_95)
+    return (cl2_baseline, cl2_conversion, conversion_ci_95)
 
 # Extract averages and 95% CI's from the bypass dataframe (i.e., CO, CO2, CH2O)
 # We want to combine 1) the measured noise and 2) the warranted accuracy of the instrument to get an estimate of 95% confidence intervals for these readings
