@@ -1,4 +1,4 @@
-,experiment_name,start_time,flow_rate,reaction_volume,tags,Selected: CH4 (ppm) baseline,Selected: CH4 (ppm) conversion,Selected: CH4 (ppm) variance,Cl2 LabJack: Cl2 Node A (ppm) baseline,Cl2 LabJack: Cl2 Node A (ppm) conversion,Cl2 LabJack: Cl2 Node A (ppm) variance
+,experiment_name,start_time,flow_rate,reaction_volume,tags,Selected: CH4 (ppm) baseline,Selected: CH4 (ppm) conversion,Selected: CH4 (ppm) conversion variance due to noise,Cl2 LabJack: Cl2 Node A (ppm) baseline,Cl2 LabJack: Cl2 Node A (ppm) conversion,Cl2 LabJack: Cl2 Node A (ppm) conversion variance due to noise
 0,09-16-24 Humidity Sweep (10-60%),16.35,200,510.3512955000001,UV_distance_conv=50,25.727131776992866,21.60850220055487,0.00023780897222419126,36.774193548387075,21.589349595074854,0.0011099549080818506
 1,09-16-24 Humidity Sweep (10-60%),76.72,200,510.3512955000001,UV_distance_conv=50,26.51054448800507,22.0592033543463,0.0011231897259394094,36.799999999999976,22.870075642965205,7.888609052210118e-29
 2,09-16-24 Humidity Sweep (10-60%),136.8,200,510.3512955000001,UV_distance_conv=50,26.745689131194656,22.26874079565202,0.0010425868575177559,37.6,23.22580645161291,0.009989594172736751

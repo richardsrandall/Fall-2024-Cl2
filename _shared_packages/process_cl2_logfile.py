@@ -120,7 +120,7 @@ class RemovalFinder:
         self.dataframes = dataframes
         self.identifier = identifier
         self.which_field = which_field
-        self.out = pd.DataFrame(columns=['experiment_name','which_field','flow_rate','reaction_volume','tags','start_time','baseline','conversion','variance'])
+        self.out = pd.DataFrame(columns=['experiment_name','which_field','flow_rate','reaction_volume','tags','start_time','baseline','conversion','conversion_variance_due_to_noise'])
         self.tags='None'
         self.sample_points = dict()
         self.averaging_windows = dict()
@@ -515,7 +515,7 @@ class RemovalFinder:
         # Make the dataframe and the header
         columns = ['experiment_name','start_time','flow_rate','reaction_volume','tags']
         for field in all_fields:
-            columns+=([field+' baseline',field+' conversion',field+' variance'])
+            columns+=([field+' baseline',field+' conversion',field+' conversion variance due to noise'])
         new_out = pd.DataFrame(columns=columns)
         # Add each row to the dataframe
         for (label,start_time) in all_sample_points:
@@ -527,7 +527,7 @@ class RemovalFinder:
                 if row.empty:
                     line_to_add+=[np.NaN,np.NaN,np.NaN]
                 else:
-                    line_to_add+=[float(row['baseline']),float(row['conversion']),float(row['variance'])]
+                    line_to_add+=[float(row['baseline']),float(row['conversion']),float(row['conversion_variance_due_to_noise'])]
             new_out.loc[len(new_out.index)] = line_to_add
         # Export it
         new_out.reindex()
