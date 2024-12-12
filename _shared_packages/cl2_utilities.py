@@ -34,9 +34,9 @@ def extract_spectrometer_data_from_conversions(conversion_dataframe,fields,perce
 # Calculate 95% CI for chlorine readings, given nominal Cl2 and measured Cl2
 # Due to the approach of frequently calibrating the Cl2 sensor, using the MFC bank's trusted Cl2 concentration as a standard, we need a slightly different CI tracking approach.
 def extract_cl2_data_from_conversions(conversion_dataframe,cl2_tank_ppm,cl2_mfc_sccm_accuracy_95,cl2_node_absolute_accuracy_95):
-    cl2_baseline = np.array(conversion_dataframe['Cl2 LabJack: Cl2 Node A (ppm) baseline'])
-    cl2_variance = np.array(conversion_dataframe['Cl2 LabJack: Cl2 Node A (ppm) variance'])
-    cl2_conversion = np.array(conversion_dataframe['Cl2 LabJack: Cl2 Node A (ppm) conversion'])
+    cl2_baseline = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus baseline (mV) baseline'])
+    cl2_variance = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus baseline (mV) variance'])
+    cl2_conversion = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus baseline (mV) conversion'])
     total_flow = np.array(conversion_dataframe['flow_rate'])
     ppm_error = cl2_tank_ppm*(cl2_mfc_sccm_accuracy_95/total_flow) # e.g., 1000 ppm tank with 0.5 sccm accuracy and 200 total flow gives 2.5 ppm error
     fractional_error_of_baseline = ppm_error / cl2_baseline # If we're using "30ppm" as a baseline to calibrate the Cl2 sensor, that could actually have been 27.5-32.5 ppm.

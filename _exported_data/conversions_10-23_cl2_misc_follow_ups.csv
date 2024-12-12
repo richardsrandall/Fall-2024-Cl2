@@ -1,4 +1,4 @@
-,experiment_name,start_time,flow_rate,reaction_volume,tags,Cl2 LabJack: Cl2 Node A (ppm) baseline,Cl2 LabJack: Cl2 Node A (ppm) conversion,Cl2 LabJack: Cl2 Node A (ppm) conversion variance due to noise
+,experiment_name,start_time,flow_rate,reaction_volume,tags,Cl2 LabJack: Cl2 reading minus baseline (mV) baseline,Cl2 LabJack: Cl2 reading minus baseline (mV) conversion,Cl2 LabJack: Cl2 reading minus baseline (mV) conversion variance due to noise
 0,10-10-24 Cl* Count w/ Excess CH4,53.37,200,510.3512955000001,UV_distance_conv=50,27.97638248847925,23.246543778801833,0.0008287166323345436
 1,10-10-24 Cl* Count w/ Excess CH4,113.9,200,510.3512955000001,UV_distance_conv=50,28.527649769585263,23.612903225806463,0.0008560916562254441
 2,10-10-24 Cl* Count w/ Excess CH4,174.43,200,510.3512955000001,UV_distance_conv=50,28.961405529953932,23.90149769585255,0.0007157324428210256
