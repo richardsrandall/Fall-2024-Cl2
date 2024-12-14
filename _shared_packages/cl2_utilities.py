@@ -2,6 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
+"""This file contains a whole bunch of utilities for generating plots using a combination of intermediate results files and 
+other user-specified inputs. It's meant to be called by a notebook that generates the final plots. Much of this package is machinery for calculating 
+95% confidence intervals for various measured quantities based on recorded noise during the experiment and the known accuracies of various sensing and 
+control devices."""
+
 # Store some assumptions about our instruments so that changing them propagates through all analyses
 class cl2_experiment_constants:
     def __init__(self):
@@ -111,11 +116,3 @@ def label_lines(ax,params,locs,transaxes=False):
         else:
             ax.text(x,y,t,rotation=r,color=c,ha='left',va='bottom',transform=ax.transAxes)
 
-# Helper to load, sync, and store time-series
-
-
-
-
-# Consider calling all of these in the initial plotting notebook? Doing all the processing in the plotting notebook is a little clunky.
-# Everything, including conversions, productions, and 95% CI's, could just live in the conversions data
-# Consider storing 95% CI's instead of variances because it's more intuitive

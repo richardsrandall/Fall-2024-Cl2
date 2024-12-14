@@ -9,6 +9,24 @@ import matplotlib.pyplot as plt
 import numpy as np
 from cycler import cycler
 
+
+""" This file contains utilities for processing raw time-series logfiles and FTIR logfiles into intermediate results files (conversion files and 
+bypass files) that can then be used to generate plots of CH4/Cl2 conversions, products, efficiencies, etc. The goal is to convert the raw logfiles 
+into a more organized format where we can more easily extract and plot various figures of interest / merit for our system. We intended for these tools 
+to only be used once for each log file, and not to need to be re-run if we change what information we wish to query from a given experiment or change 
+our assumptions around some intrument's accuracy, the state of some hand-noted value during the experiment, etc. Therefore, certain functions (e.g., 
+confidence interval generation) live in the cl2_utilities.py file instead.
+
+Refer to one of the data processing notebooks to see how this package is used in practice. Basically, the user makes function calls and tweaks various 
+parameters, while the package generates various diagnostic plots to help the user ensure that the data are being extracted correctly. The package is mainly 
+meant for our own use, so the extraction scripts might be a bit confusing, but basically the script looks within user-specified bounds to identify when 
+the UV light turned on and off, then samples the CH4, Cl2, and other gas concentrations at the appropriate times to learn how each changed with the light
+cycle. The shaded regions in the top panel of the generated plots correspond to the windows in which different values are sampled. Blue corresponds to
+light-off measurements, cyan corresponds to light-on measurements of Cl2 and CH4, and red corresponds to light-on measurements of CO, CH2O, and CO2, which
+can only be seen when the caustic scrubbing bubbler is temporarily bypassed at a known time in each light cycle.
+"""
+
+
 # Extract the file data
 def extract_data(info,hush=False): #Hush suppresses some diagnostic outputs
     paths = tuple(i[0] for i in info)
