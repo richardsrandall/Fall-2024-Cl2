@@ -116,3 +116,16 @@ def label_lines(ax,params,locs,transaxes=False):
         else:
             ax.text(x,y,t,rotation=r,color=c,ha='left',va='bottom',transform=ax.transAxes)
 
+# Helper to plot timeseries faster
+def do_timeseries(ax,props,name,x,y):
+    ax.plot(x,y,linewidth=props[name]['linewidth'],color=props[name]['color'])
+
+def label_tslines(ax,params,locs,transaxes=False):
+    for (l,x,y,r) in locs:
+        t = params[l]['tstext']
+        c = params[l]['color']
+        if not transaxes:
+            ax.text(x,y,t,rotation=r,color=c,ha='left',va='bottom')
+        else:
+            ax.text(x,y,t,rotation=r,color=c,ha='left',va='bottom',transform=ax.transAxes)
+

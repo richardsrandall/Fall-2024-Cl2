@@ -128,6 +128,21 @@ def trim_dataframes(dataframes,trimming_params,plot=True,which_field='FTIR: CH4 
     # Return the axes
     return (trimmed_dataframes,ax1,ax2)
 
+def find_UV_changes(UV_status,timestamps):
+    on_indices = []
+    off_indices = []
+
+    for i in range(1, len(UV_status)):
+        if UV_status.iloc[i] != UV_status.iloc[i-1]:  # Check if the current value is different from the previous value
+            if UV_status.iloc[i] == 1:                # Transition from 0 to 1
+                on_indices.append(UV_status.index[i])
+            else:                                     # Transition from 1 to 0
+                off_indices.append(UV_status.index[i])
+    on_times = timestamps[on_indices]
+    off_times = timestamps[off_indices]
+
+    return (on_times, off_times)
+
 class RemovalFinder:
     
     def __init__(self,dataframes,identifier,which_field=None):
