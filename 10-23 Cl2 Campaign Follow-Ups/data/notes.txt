@@ -1,0 +1,34 @@
+Began by trying to diagnose why the sensor board read mostly correctly at 30+ ppl Cl2 but had a baseline of 52mV.
+Some fiddling led to a hypothesis that it's an issue of loose electrical connection, which seems to be working so far.
+Replaced the connections to the LabJack with multimeter probes, which caused the baseline reading to return to 39-40 mV.
+At 12:15pm I adjusted the board span with 3/4 of a turn clockwise to boost the 30 ppm signal from 55mV to 64mV.
+Another 3/4 clockwise at 12:45 to get it to 72mV.
+
+Confirmed linearity of sensor.
+
+Did a 'baseline' CH4 removal trial with a bypass and a 'baseline' radical count, in case anything's changed since our previous ones.
+
+At 4:30, realized I might have messed up and forgotten to cover the teflon tube by the chlorine tank. Re-doing the Cl* count quickly.
+Doesn't appear to have made much of a difference.
+
+At 4:40, moved the light to 22".
+The Thorlabs power meter is acting strangely. I've reverted from PyOpticon to the thorlabs app for the sake of reliability.
+The 'on' period from 4:40 to 4:45 is the reading at 11". The higher reading from around 4:45 is with the light moved further.
+The power meter reading increases with the light further because the meter is now in the direct cone of light from the LEDs, rather 
+than just getting diffuse reflectance.
+First attempt is using 135 sccm of total flow, the minimum possible with the 100 ppm Cl2 tank.
+Conversion was just a tad too low, so moved the light to 21" then 20", so we can use the 1000 Cl2 tank.
+Finally settled on 18", which gave a steady state of 41.8mV, off a baseline of 61.5mV.
+
+Next morning -- moved to 27", set flow to 75, moved again to 25".
+
+
+Monday 12-9:
+- 11:15-13:00, tried to redo 100 ppm tank calibration for 18" position. We seemed to get 87% Cl2 conversion to Cl*, so didn't move the light.
+- Ran out of 100 ppm after that.
+- Rigged water-cooled LED panel after that with 1000 tank. 14:15 was a dud. 14:40 was radical count.
+- Power supply stabilized to read 36V and 3.5A; I have iphone pictures to confirm.
+- 15:15 and 15:45 are identical conversion trials with the powerful light. Second one used the Picarro. Manual bypass.
+- 17:00, re-did 18" trial with residence time calculated with 100 tank. 16:45 is a dud; too much oxygen.
+- 18:30, re-did trial in default configuration, 200 sccm of flow and 11" light.
+

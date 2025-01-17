@@ -1,0 +1,23 @@
+Cl* counter with low Cl2
+
+5% CH4 -> 50 sccm CH4 MFC -> 12,500 ppm CH4
+20% O2
+80 sccm of 200 sccm humid N2
+Power meter didn't log... Light at standard dist (14")
+
+Dec 18th: 200 ppm Cl2 node
+1. 1000 ppm Cl2 tank -> 20 ppm Cl2 (* this gave same mV...) had to set Cl2 MFC to 4.1 sccm
+2. 100 ppm Cl2 tank -> 15 ppm Cl2  (* ... as this...)
+3. 100 ppm Cl2 tank -> 10 ppm Cl2
+4. 100 ppm Cl2 tank -> 5 ppm Cl2
+
+Dec 19th: 20 ppm Cl2 node
+5. 100 ppm Cl2 tank -> 15 ppm Cl2
+6. 100 ppm Cl2 tank -> 10 ppm Cl2
+7. 100 ppm Cl2 tank -> 5 ppm Cl2
+8. 100 ppm Cl2 tank -> 2 ppm Cl2 (had to set Cl2 MFC to 4.1 sccm)
+
+TODO later, when a new 20ppm Cl2 tank arrives...
+8. 20 ppm Cl2 tank -> 2 ppm Cl2
+9. 20 ppm Cl2 tank -> 1 ppm Cl2
+

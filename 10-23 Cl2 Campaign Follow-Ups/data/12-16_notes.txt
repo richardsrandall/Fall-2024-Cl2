@@ -1,0 +1,16 @@
+Using 20 ppm Cl2/N2 tank
+
+Swapped out the 200 ppm node with a 20 ppm node.
+Re-zeroed: 1 full turn CCW --> 42.3 mV when flowing humid air
+Re-spanned: 5 full turns CW --> 180.2 mV when flowing 20 ppm Cl2/N2
+Turning off Cl2 returned the node to 41.6 mV...
+
+Using 10ppm CH4/N2 tank, ran 2,5,10 ppm Cl2 sweep with CH4 at 2ppm.
+Note MFM read 215 sccm (should be 200 sccm).
+Because of flow limits humidified CH4 and O2 (fixed at 80 sccm) and used "Humid N2 MFC" as dry N2. Cl2 MFC also provided dry flow. So 80 sccm humidified --> ~35% RH
+
+Using 1000ppm CH4/N2 tank, ran 5,10,15 ppm Cl2 sweep with CH4 at 5ppm. Then ran 10ppm both Cl2 and CH4.
+Because of flow limits, humidifed all gases (but Cl2 MFC), and selected LF N2 and HF N2 depending on flow rate. Humid N2 MFC not used.
+	Note: this means the humidity changed across these cycles (50-150 of 200 sccm humid)
+
+Dec 17: 10ppm CH4 tank again to get 1ppm and 5ppm Cl2 @ 2ppm CH4. All gases through humidifier. Humid N2 dry.
