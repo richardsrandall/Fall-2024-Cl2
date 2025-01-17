@@ -22,7 +22,6 @@ Finally settled on 18", which gave a steady state of 41.8mV, off a baseline of 6
 
 Next morning -- moved to 27", set flow to 75, moved again to 25".
 
-
 Monday 12-9:
 - 11:15-13:00, tried to redo 100 ppm tank calibration for 18" position. We seemed to get 87% Cl2 conversion to Cl*, so didn't move the light.
 - Ran out of 100 ppm after that.
