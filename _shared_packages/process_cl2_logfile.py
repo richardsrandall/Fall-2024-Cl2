@@ -184,44 +184,45 @@ class RemovalFinder:
         light_delay = kwargs['light_delay'] if 'light_delay' in kwargs.keys() else 1
         sample_duration = kwargs['sample_duration'] if 'sample_duration' in kwargs.keys() else 5
         record_no_removal = kwargs['record_no_removal'] if 'record_no_removal' in kwargs.keys() else False
+        averaging_windows = kwargs['force_averaging_windows'] if 'force_averaging_windows' in kwargs.keys() else None
          # Convert int index to string key, if needed
         if isinstance(which_dataframe, int):
             which_dataframe = list(self.dataframes.keys())[which_dataframe] # Can label either with string or integer
         # Do the calculation
         df = self.dataframes[which_dataframe]
-
         # Identify the times when the light turns on and off
-        uv_light_data = list(df['UV Light: Actual Status'])
-        toggle_indices = []
-        if uv_light_data[0]==1:
-            toggle_indices.append(0)
-        last_change = 0
-        for i in range(len(uv_light_data)-1):
-            if uv_light_data[i]==0 and uv_light_data[i+1]==1: #Light turns on
-                toggle_indices.append(i)
-            if uv_light_data[i]==1 and uv_light_data[i+1]==0: #Light turns off
-                toggle_indices.append(i)
-        # Get rid of spurious rapid UV light cycles
-        n = 0
-        while n < len(toggle_indices)-1:
-            if toggle_indices[n+1]-toggle_indices[n]<4:
-                toggle_indices.pop(n)
-                toggle_indices.pop(n)
-            else:
-                n+=1
-        #toggle_indices = toggle_indices[14:16]
+        if averaging_windows is None:
+            uv_light_data = list(df['UV Light: Actual Status'])
+            toggle_indices = []
+            if uv_light_data[0]==1:
+                toggle_indices.append(0)
+            last_change = 0
+            for i in range(len(uv_light_data)-1):
+                if uv_light_data[i]==0 and uv_light_data[i+1]==1: #Light turns on
+                    toggle_indices.append(i)
+                if uv_light_data[i]==1 and uv_light_data[i+1]==0: #Light turns off
+                    toggle_indices.append(i)
+            # Get rid of spurious rapid UV light cycles
+            n = 0
+            while n < len(toggle_indices)-1:
+                if toggle_indices[n+1]-toggle_indices[n]<4:
+                    toggle_indices.pop(n)
+                    toggle_indices.pop(n)
+                else:
+                    n+=1
+            #toggle_indices = toggle_indices[14:16]
         
-        # Turn this into windows for averaging
-        averaging_windows = []
-        for i in range(int(len(toggle_indices)/2)):
-            light_on_time = list(df['Minutes'])[toggle_indices[2*i]]+offset
-            light_off_time = list(df['Minutes'])[toggle_indices[2*i+1]]+offset
-            if light_on_time<=0 or light_on_time-sample_duration-light_delay < start_time or light_off_time-light_delay+sample_duration > end_time:
-                continue
-            averaging_windows.append((light_on_time-sample_duration-light_delay,light_on_time-light_delay))
-            averaging_windows.append((light_off_time-sample_duration-light_delay,light_off_time-light_delay))
-        # We always sample for a 5-min window centered on when the light turns on, & a 10-minute window w/
-        # the light turning off at the 3/4 point.
+            # Turn this into windows for averaging
+            averaging_windows = []
+            for i in range(int(len(toggle_indices)/2)):
+                light_on_time = list(df['Minutes'])[toggle_indices[2*i]]+offset
+                light_off_time = list(df['Minutes'])[toggle_indices[2*i+1]]+offset
+                if light_on_time<=0 or light_on_time-sample_duration-light_delay < start_time or light_off_time-light_delay+sample_duration > end_time:
+                    continue
+                averaging_windows.append((light_on_time-sample_duration-light_delay,light_on_time-light_delay))
+                averaging_windows.append((light_off_time-sample_duration-light_delay,light_off_time-light_delay))
+            # We always sample for a 5-min window centered on when the light turns on, & a 10-minute window w/
+            # the light turning off at the 3/4 point.
 
         # Do the actual averaging...
         window_avg_values = []
