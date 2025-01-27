@@ -96,7 +96,7 @@ def get_cl_radical_budget(cl2_inlet_concs):
     # We return twice that value, since you get 2 Cl*'s per Cl2 photolyzed
     # One could alternatively track moles of Cl* produces per second in the reactor, but the units would cancel anyway
     # All of this is for a 200 sccm flow rate.
-    delta_cl2_excess_ch4_ppm = {5:(4,0.5),10:(8,1),20:(16,2),30:(24,3),45:(36,4.5),60:(48,6),90:(72,9)}
+    delta_cl2_excess_ch4_ppm = {1:(0.8,0.1),2:(1.6,0.2),5:(4,0.5),10:(8,1),20:(16,2),30:(24,3),45:(36,4.5),60:(48,6),90:(72,9)}
     available_concs = list(delta_cl2_excess_ch4_ppm.keys())
     rad_budget_out = 2*np.interp(cl2_inlet_concs,available_concs,np.array([delta_cl2_excess_ch4_ppm[k][0] for k in available_concs]))
     rad_budget_95_ci_out = 2*np.interp(cl2_inlet_concs,available_concs,np.array([delta_cl2_excess_ch4_ppm[k][1] for k in available_concs]))
