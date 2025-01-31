@@ -38,14 +38,17 @@ def extract_spectrometer_data_from_conversions(conversion_dataframe,fields,perce
 
 # Calculate 95% CI for chlorine readings, given nominal Cl2 and measured Cl2
 # Due to the approach of frequently calibrating the Cl2 sensor, using the MFC bank's trusted Cl2 concentration as a standard, we need a slightly different CI tracking approach.
-def extract_cl2_data_from_conversions(conversion_dataframe,bypass_dataframe,cl2_tank_ppm,cl2_mfc_sccm_accuracy_95,cl2_node_absolute_accuracy_95):
+def extract_cl2_data_from_conversions(conversion_dataframe,bypass_dataframe,cl2_tank_ppm,cl2_mfc_sccm_accuracy_95,cl2_node_absolute_accuracy_95,override_cl2_baseline = None):
     #cl2_baseline = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) baseline'])
     #cl2_variance = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) conversion variance due to noise'])
     #cl2_conversion = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) conversion'])
     start_times = conversion_dataframe['start_time']
     means = (bypass_dataframe.groupby('closest_start_time').mean(numeric_only=True).reset_index()) 
     flows = conversion_dataframe['flow_rate']
-    cl2_baseline = [(tank/flow)*float(means[means.closest_start_time==t]['Cl2 MFC: Setpoint Entry']) for t,tank,flow in zip(start_times,cl2_tank_ppm,flows)]
+    if override_cl2_baseline is not None:
+        cl2_baseline = override_cl2_baseline
+    else:
+        cl2_baseline = [(tank/flow)*float(means[means.closest_start_time==t]['Cl2 MFC: Setpoint Entry']) for t,tank,flow in zip(start_times,cl2_tank_ppm,flows)]
     cl2_conversion = [conv*(nom/baseline) for nom,conv,baseline in zip(cl2_baseline,conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) conversion'],conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) baseline'])]
     cl2_conversion_scale = np.array(cl2_conversion)/np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) conversion'])
     cl2_variance = cl2_conversion_scale*cl2_conversion_scale*np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) conversion variance due to noise'])
@@ -89,18 +92,6 @@ def get_95_ci_of_ratio(num,num_ci_95,denom,denom_ci_95):
     var_z = ((mu_x**2) / (mu_y**2))*(var_x/(mu_x**2) + var_y/(mu_y**2))
     ci_95_z = np.sqrt(var_z)*2
     return ci_95_z
-
-# Helper to store the Cl* radical budgets for a number of different reaction conditions
-def get_cl_radical_budget(cl2_inlet_concs):
-    # Values stored are delta-Cl2 with a vast excess CH4, in ppm
-    # We return twice that value, since you get 2 Cl*'s per Cl2 photolyzed
-    # One could alternatively track moles of Cl* produces per second in the reactor, but the units would cancel anyway
-    # All of this is for a 200 sccm flow rate.
-    delta_cl2_excess_ch4_ppm = {1:(0.8,0.1),2:(1.6,0.2),5:(4,0.5),10:(8,1),20:(16,2),30:(24,3),45:(36,4.5),60:(48,6),90:(72,9)}
-    available_concs = list(delta_cl2_excess_ch4_ppm.keys())
-    rad_budget_out = 2*np.interp(cl2_inlet_concs,available_concs,np.array([delta_cl2_excess_ch4_ppm[k][0] for k in available_concs]))
-    rad_budget_95_ci_out = 2*np.interp(cl2_inlet_concs,available_concs,np.array([delta_cl2_excess_ch4_ppm[k][1] for k in available_concs]))
-    return (np.array(rad_budget_out),np.array(rad_budget_95_ci_out))
 
 # Helper to plot lines faster
 def do_error_bar(ax,props,name,x,y,e):
