@@ -1,0 +1,2 @@
+Realistic trial with 1.9ppm CH4, 1.9ppm Cl2, 425ppm CO2, 40% RH (all N2 thru bubbler)
+20ppm Cl2/N2 tank, 10ppm CH4/N2 tank, 5% CO2/Ar tank
