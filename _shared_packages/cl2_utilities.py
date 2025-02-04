@@ -116,6 +116,7 @@ def do_error_bar(ax,props,name,x,y,e):
 
 # Helper to label lines on an existing plot
 def label_lines(ax,params,locs,transaxes=False):
+    #print(lines[0].__dict__.keys())
     for (l,x,y,r) in locs:
         t = params[l]['text']
         c = params[l]['color']
