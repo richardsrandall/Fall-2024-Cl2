@@ -19,6 +19,23 @@ class cl2_experiment_constants:
         self.cl2_mfc_sccm_accuracy_95 = 0.5 #standard cc's per minute; based on our experience working with the device and checking it with flow meters
         self.cl2_node_absolute_accuracy_95 = 1 #ppm; an estimate of error due to slow rates of stabilization due to Cl2 sticking to things
 
+        # Assumptions for cost modeling
+        self.LCOE = 0.04
+        self.LED_cost_per_kwh = 0.07
+        self.reflector_efficiency = 0.90 #Assume 90% of photons find a Cl2
+        self.cost_per_ton_cl2 = 150 #dollars per ton
+
+        # Go through a bunch of unit conversions to get the cost per mole of photons
+        avogadro = 6.022e23
+        ev_per_j = 6.24e18 #eV per Joule
+        j_per_kwh = 3.6e6
+        uv_photon_energy_ev = 3.5
+        LED_efficiency = 0.72
+        kwh_per_mole_photons = avogadro*uv_photon_energy_ev/(ev_per_j*j_per_kwh*LED_efficiency)
+        self.LED_cost_per_mole_photons = (self.LCOE+self.LED_cost_per_kwh)*kwh_per_mole_photons
+
+
+
 # Extract conversions and 95% CI's from the conversion dataframe for gases from optical spectrometry (i.e., CH4)
 # We want to combine 1) the measured noise and 2) the warranted accuracy of the instruments to get an estimate of 95% confidence intervals for these readings
 # E.g., the FTIR is generally accurate to +-1% and 1 ppm, and there's also some noise in the readings.
