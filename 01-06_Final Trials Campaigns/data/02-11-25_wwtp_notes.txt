@@ -1,0 +1,13 @@
+In the 3-30 pm logfile from 15:30 to 17:00, I had the other sensor board connected. It doesn't seem like it worked too well.
+
+The 11-30 AM logfile contains a few cycles of the WWTP test, then 2 radical counts.
+The 3-30 pm logfile, after the dud trials, contains another 2 radical counts.
+The span dial on the main sensor board was not changed between the sets of radical counts, though the sensor was unplugged and replugged.
+I realized that on the second set of radical counts (and possibly the first), we were still flowing a little bit of toluene, and also
+the node hadn't been adequately covered with UV blockers in the last 2. So I did one final trial that I believe to be the most accurate,
+though its result isn't really different from the previous 2 cycles.
+
+It's possible that a voltage spike at the very beginning of the day, circa 10am, had some effect on the readings. However now the Cl2 
+node seems to be working completely normally.
+
+Left it to run with the Cl2 closed after I went home so as to check that the baseline is what we think it is. 

@@ -1,0 +1,6 @@
+H2S Sweep: 0.5, 1, 2, 5, 7.5, 12.5 ppm H2S
+Node: 1000ppm Cl2. Adjusted span until node read ~175mV @30ppm Cl2
+Concs. 0.5-12.5ppm H2S, 30ppm CH4 and Cl2 @ 200 sccm
+Tanks: 50ppm H2S, 1000ppm Cl2, 1000ppm CH4
+
+The drop in CH4 during the last cycle is an artifact of the flow dropping. Due to blockage?
