@@ -112,7 +112,7 @@ def get_95_ci_of_ratio(num,num_ci_95,denom,denom_ci_95):
 
 # Helper to plot lines faster
 def do_error_bar(ax,props,name,x,y,e):
-    ax.errorbar(x,y,e,label=props[name]['text'],marker=props[name]['marker'],linestyle=props[name]['linestyle'],color=props[name]['color'],capsize=3)
+    ax.errorbar(x,y,e,label=props[name]['text'],marker=props[name]['marker'],linestyle=props[name]['linestyle'],linewidth=props[name]['linewidth'],color=props[name]['color'],capsize=3)
 
 # Helper to label lines on an existing plot
 def label_lines(ax,params,locs,transaxes=False):
