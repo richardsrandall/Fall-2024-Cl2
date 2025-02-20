@@ -19,6 +19,10 @@ class cl2_experiment_constants:
         self.cl2_mfc_sccm_accuracy_95 = 0.5 #standard cc's per minute; based on our experience working with the device and checking it with flow meters
         self.cl2_node_absolute_accuracy_95 = 1 #ppm; an estimate of error due to slow rates of stabilization due to Cl2 sticking to things
 
+        # Hard-coded values for cost modeling
+        self.cost_cl2_usage_coefficient = 1050
+        self.cost_cl_radical_usage_coefficient = 840
+
         # Assumptions for cost modeling
         self.LCOE = 0.04
         self.LED_cost_per_kwh = 0.07
