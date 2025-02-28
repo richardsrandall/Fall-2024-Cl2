@@ -17,7 +17,12 @@ class cl2_experiment_constants:
         self.picarro_absolute_accuracy_95 = 0.1 #ppm
         self.picarro_percent_accuracy_95 = 5 #percent
         self.cl2_mfc_sccm_accuracy_95 = 0.5 #standard cc's per minute; based on our experience working with the device and checking it with flow meters
-        self.cl2_node_absolute_accuracy_95 = 0.0 # Deprecated
+        self.cl2_node_absolute_accuracy_95 = 0.0 # we included this originally, but realized that all errors in the 
+                                                # cl2 system are in some way dependent on the concentration of Cl2 we're
+                                                # supplying &/or trying to sense. All the error really comes down to drift/
+                                                # accuracy in the MFC, which we need to use to calibrate the chlorine sensor,
+                                                # so the cl2_mfc_sccm_accuracy_95 term really captures all uncertainty in our
+                                                # chlorine readings.
 
         # Hard-coded values for cost modeling
         self.cost_cl2_usage_coefficient = 1050
