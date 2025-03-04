@@ -17,12 +17,7 @@ class cl2_experiment_constants:
         self.picarro_absolute_accuracy_95 = 0.1 #ppm
         self.picarro_percent_accuracy_95 = 5 #percent
         self.cl2_mfc_sccm_accuracy_95 = 0.5 #standard cc's per minute; based on our experience working with the device and checking it with flow meters
-        self.cl2_node_absolute_accuracy_95 = 0.0 # we included this originally, but realized that all errors in the 
-                                                # cl2 system are in some way dependent on the concentration of Cl2 we're
-                                                # supplying &/or trying to sense. All the error really comes down to drift/
-                                                # accuracy in the MFC, which we need to use to calibrate the chlorine sensor,
-                                                # so the cl2_mfc_sccm_accuracy_95 term really captures all uncertainty in our
-                                                # chlorine readings.
+        self.cl2_node_percent_accuracy_95 = 4 #percent; this accounts for the fact that Cl2 is sticky, so we always wait for sensor transients to die out to within 1 mV on readings of ~25mV.
 
         # Hard-coded values for cost modeling
         self.cost_cl2_usage_coefficient = 1050
@@ -64,7 +59,7 @@ def extract_spectrometer_data_from_conversions(conversion_dataframe,fields,perce
 
 # Calculate 95% CI for chlorine readings, given nominal Cl2 and measured Cl2
 # Due to the approach of frequently calibrating the Cl2 sensor, using the MFC bank's trusted Cl2 concentration as a standard, we need a slightly different CI tracking approach.
-def extract_cl2_data_from_conversions(conversion_dataframe,bypass_dataframe,cl2_tank_ppm,cl2_mfc_sccm_accuracy_95,cl2_node_absolute_accuracy_95,override_cl2_baseline = None):
+def extract_cl2_data_from_conversions(conversion_dataframe,bypass_dataframe,cl2_tank_ppm,cl2_mfc_sccm_accuracy_95,cl2_node_percent_accuracy_95,override_cl2_baseline = None):
     #cl2_baseline = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) baseline'])
     #cl2_variance = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) conversion variance due to noise'])
     #cl2_conversion = np.array(conversion_dataframe['Cl2 LabJack: Cl2 reading minus zero (mV) conversion'])
@@ -82,8 +77,9 @@ def extract_cl2_data_from_conversions(conversion_dataframe,bypass_dataframe,cl2_
     total_flow = np.array(conversion_dataframe['flow_rate'])
     ppm_error = np.array(cl2_tank_ppm)*(cl2_mfc_sccm_accuracy_95/total_flow) # e.g., 1000 ppm tank with 0.5 sccm accuracy and 200 total flow gives 2.5 ppm error
     fractional_error_of_baseline = ppm_error / cl2_baseline # If we're using "30ppm" as a baseline to calibrate the Cl2 sensor, that could actually have been 27.5-32.5 ppm.
-    conv_percent_accuracy_std = 0.5*fractional_error_of_baseline*cl2_conversion # The Cl2 sensor reads relative to that baseline, so we develop the 95% CI for the Cl2 conversion accordingly.
-    conv_total_std = np.sqrt(conv_percent_accuracy_std**2 + cl2_variance + (0.5*cl2_node_absolute_accuracy_95)**2) # Combine the variances due to calibration and due to measured noise, the latter of which is usually quite small.
+    conv_percent_accuracy_std = 0.5*fractional_error_of_baseline*np.array(cl2_conversion) # The Cl2 sensor reads relative to that baseline, so we develop the 95% CI for the Cl2 conversion accordingly.
+    node_accuracy_std = 0.01*0.5*cl2_node_percent_accuracy_95*np.array(cl2_conversion)
+    conv_total_std = np.sqrt(conv_percent_accuracy_std**2 + cl2_variance + (node_accuracy_std)**2) # Combine the variances due to calibration and due to measured noise, the latter of which is usually quite small.
     conversion_ci_95 = 2*conv_total_std
     return (cl2_baseline, cl2_conversion, conversion_ci_95)
 
