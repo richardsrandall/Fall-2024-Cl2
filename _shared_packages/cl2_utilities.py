@@ -126,7 +126,7 @@ def label_lines(ax,params,locs,transaxes=False):
         t = params[l]['text']
         c = params[l]['color']
         if not transaxes:
-            ax.text(x,y,t,rotation=r,color=c,ha='left',va='bottom')
+            ax.text(x, y, t, rotation=r, color=c, ha='left', va='bottom')
         else:
             ax.text(x,y,t,rotation=r,color=c,ha='left',va='bottom',transform=ax.transAxes)
 
@@ -138,8 +138,12 @@ def label_tslines(ax,params,locs,transaxes=False):
     for (l,x,y,r) in locs:
         t = params[l]['tstext']
         c = params[l]['color']
-        if not transaxes:
-            ax.text(x,y,t,rotation=r,color=c,ha='left',va='bottom')
+        if 'weight' in params[l].keys():
+            b = params[l]['weight']
         else:
-            ax.text(x,y,t,rotation=r,color=c,ha='left',va='bottom',transform=ax.transAxes)
+            b = 'normal'
+        if not transaxes:
+            ax.text(x,y,t,rotation=r,color=c,ha='left',va='bottom', fontweight=b)
+        else:
+            ax.text(x,y,t,rotation=r,color=c,ha='left',va='bottom',transform=ax.transAxes, fontweight=b)
 
