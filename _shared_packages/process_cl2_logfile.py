@@ -162,7 +162,7 @@ class RemovalFinder:
         self.bypass_intervals = dict()
         self.rate_scale=1
         
-    def set_setup_values(self,which_field,flow_rate=200,reaction_volume = 20*3.14159*0.25*5.7*5.7):#Assumes a 20cm long reaction zone
+    def set_setup_values(self,which_field,flow_rate=200,reaction_volume = 600):
         self.flow_rate = flow_rate
         self.reaction_volume = reaction_volume
         self.which_field = which_field
